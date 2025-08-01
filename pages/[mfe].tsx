@@ -4,6 +4,8 @@ import { useParams } from 'next/navigation'
 
 const mfeMap = {
   'dashboard-mfe': dynamic(() => import('header/App'), { ssr: false }),
+  'card-mfe': dynamic(() => import('card/App'), { ssr: false }),
+  'footer-mfe': dynamic(() => import('footer/App'), { ssr: false }),
 }
 
 export default function MFELoader() {

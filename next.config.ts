@@ -9,8 +9,8 @@ const nextConfig: NextConfig = {
         filename: "static/chunks/remoteEntry.js",
         remotes: {
           header: `header@http://localhost:3001/_next/static/chunks/remoteEntry.js`,
-          footer: `footer@http://localhost:3001/_next/static/chunks/remoteEntry.js`,
-          cards: `cards@http://localhost:3001/_next/static/chunks/remoteEntry.js`,
+          footer: `footer@http://localhost:3002/_next/static/chunks/remoteEntry.js`,
+          card: `card@http://localhost:3003/_next/static/chunks/remoteEntry.js`,
         },
         shared: {
           redux: { singleton: true, eager: true },
