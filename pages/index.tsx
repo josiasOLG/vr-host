@@ -7,7 +7,7 @@ export default function Home() {
 export const getServerSideProps: GetServerSideProps = async () => {
   return {
     redirect: {
-      destination: "/dashboard-mfe",
+      destination: "/dashboard",
       permanent: false,
     },
   };
