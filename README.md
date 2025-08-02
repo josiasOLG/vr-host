@@ -15,12 +15,46 @@ O sistema é composto por:
 
 - Node.js v22.14.0 ou superior
 - npm, yarn, pnpm ou bun
+- Git
 
-## Instalação Completa
+## Instalação Inicial
 
-Para instalar todas as dependências de todos os projetos de uma vez:
+### 1. Clonar todos os repositórios
+
+Para que o sistema funcione corretamente, todos os projetos devem estar na mesma pasta raiz. Execute os comandos abaixo para clonar todos os repositórios:
 
 ```bash
+# Criar pasta principal do projeto
+mkdir VR
+cd VR
+
+# Clonar todos os repositórios
+git clone https://github.com/josiasOLG/vr-host.git
+git clone https://github.com/josiasOLG/vr-card.git
+git clone https://github.com/josiasOLG/vr-header.git
+git clone https://github.com/josiasOLG/vr-footer.git
+```
+
+### 2. Estrutura de pastas esperada
+
+Após clonar todos os repositórios, sua estrutura de pastas deve ficar assim:
+
+```
+VR/
+├── vr-host/
+├── vr-card/
+├── vr-header/
+└── vr-footer/
+```
+
+⚠️ **Importante**: Esta estrutura é obrigatória para o correto funcionamento do Module Federation entre os microfrontends.
+
+### 3. Instalar dependências
+
+Entre na pasta do host e instale as dependências de todos os projetos:
+
+```bash
+cd vr-host
 npm run install:all
 ```
 
@@ -28,12 +62,18 @@ Ou instale manualmente cada projeto:
 
 ```bash
 # Instalar dependências do host
+cd vr-host
 npm install
 
 # Instalar dependências dos microfrontends
-npm run install:card
-npm run install:header
-npm run install:footer
+cd ../vr-card
+npm install
+
+cd ../vr-header
+npm install
+
+cd ../vr-footer
+npm install
 ```
 
 ## Como Executar o Sistema
@@ -41,6 +81,7 @@ npm run install:footer
 ### Opção 1: Executar tudo simultaneamente (Recomendado)
 
 ```bash
+# Na pasta vr-host
 npm run start:all
 ```
 
@@ -56,22 +97,26 @@ Este comando iniciará todos os serviços simultaneamente:
 Se preferir ter controle individual sobre cada serviço:
 
 ```bash
-# Terminal 1 - Host (deve ser o último a iniciar)
+# Terminal 1 - Card MFE
+cd vr-card
 npm run dev
 
-# Terminal 2 - Card MFE
-npm run dev:card
+# Terminal 2 - Header MFE
+cd vr-header
+npm run dev
 
-# Terminal 3 - Header MFE
-npm run dev:header
+# Terminal 3 - Footer MFE
+cd vr-footer
+npm run dev
 
-# Terminal 4 - Footer MFE
-npm run dev:footer
+# Terminal 4 - Host (deve ser o último a iniciar)
+cd vr-host
+npm run dev
 ```
 
 **Importante**: Os microfrontends devem estar rodando antes do host para evitar erros de carregamento.
 
-## Scripts Disponíveis
+## Scripts Disponíveis (executar na pasta vr-host)
 
 ### Desenvolvimento
 
@@ -100,7 +145,7 @@ npm run dev:footer
 - `npm run build` - Build da aplicação host
 - `npm run start` - Inicia aplicação em modo produção
 
-## Estrutura dos Portas
+## Estrutura das Portas
 
 | Serviço    | Porta | URL                   |
 | ---------- | ----- | --------------------- |
@@ -133,7 +178,10 @@ Durante o desenvolvimento, você pode modificar qualquer microfrontend e ver as 
 
 ### Erro de "Module not found"
 
-Certifique-se de que todos os microfrontends estão rodando antes de iniciar o host.
+Certifique-se de que:
+1. Todos os repositórios foram clonados na mesma pasta raiz
+2. Todos os microfrontends estão rodando antes de iniciar o host
+3. A estrutura de pastas está correta
 
 ### Porta já em uso
 
@@ -143,10 +191,21 @@ Se alguma porta estiver ocupada, você pode modificar no arquivo `next.config.mj
 
 Os microfrontends são configurados para aceitar requests do host. Se houver problemas, verifique as configurações de CORS nos arquivos de configuração.
 
+### Erro ao executar scripts npm
+
+Se você estiver enfrentando problemas com os scripts `npm run install:all` ou `npm run start:all`, certifique-se de que está executando os comandos na pasta `vr-host` e que todos os repositórios foram clonados corretamente.
+
 ## Deploy
 
 Para deploy em produção, cada microfrontend deve ser deployado independentemente. Recomendamos usar a Vercel para facilitar o processo.
 
+## Repositórios do Projeto
+
+- **Host**: https://github.com/josiasOLG/vr-host.git
+- **Card MFE**: https://github.com/josiasOLG/vr-card.git
+- **Header MFE**: https://github.com/josiasOLG/vr-header.git
+- **Footer MFE**: https://github.com/josiasOLG/vr-footer.git
+
 ---
 
-**Dica**: Use `npm run start:all` para uma experiência de desenvolvimento mais fluida, especialmente quando estiver trabalhando
+**Dica**: Use `npm run start:all` para uma experiência de desenvolvimento mais fluida, especialmente quando estiver trabalhando com múltiplos microfrontends
