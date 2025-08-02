@@ -1,22 +1,20 @@
 import { NextFederationPlugin } from '@module-federation/nextjs-mf';
+import { name, filename, exposes, remotes, shared } from './module-federation.config.js';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack(config) {
+  webpack(config, { isServer }) {
     
       config.plugins.push(
         new NextFederationPlugin({
-          name: 'host',
-          filename: 'static/chunks/remoteEntry.js',
+          name,
+          filename,
           exposes: {
             './useCart': './shared/hooks/useCart.ts',
             './store': './shared/store/index.ts',
+            ...exposes,
           },
-          remotes: {
-            header: `header@http://localhost:3001/_next/static/chunks/remoteEntry.js`,
-            footer: `footer@http://localhost:3002/_next/static/chunks/remoteEntry.js`,
-            card: `card@http://localhost:3003/_next/static/chunks/remoteEntry.js`,
-          },
+          remotes: remotes(isServer),
           shared: {
             react: { 
               singleton: true, 
@@ -38,6 +36,7 @@ const nextConfig = {
               eager: true,
               requiredVersion: "^9.1.2"
             },
+            ...shared,
           },
           extraOptions: {
             exposePages: true,
