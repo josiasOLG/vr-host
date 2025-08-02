@@ -3,11 +3,13 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
 import uiSlice from './slices/uiSlice'
 import communicationSlice from './slices/communicationSlice'
+import cartSlice from './slices/cartSlice'
 
 export const store = configureStore({
   reducer: {
     ui: uiSlice,
     communication: communicationSlice,
+    cart: cartSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

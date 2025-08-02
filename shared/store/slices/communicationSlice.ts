@@ -1,10 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-// Types for MFE communication
 export interface MFEMessage {
   id: string
   from: string
-  to?: string // undefined means broadcast to all MFEs
+  to?: string 
   type: string
   payload: unknown
   timestamp: number
@@ -34,19 +33,16 @@ const communicationSlice = createSlice({
   name: 'communication',
   initialState,
   reducers: {
-    // Register MFE
     registerMFE: (state, action: PayloadAction<string>) => {
       if (!state.connectedMFEs.includes(action.payload)) {
         state.connectedMFEs.push(action.payload)
       }
     },
 
-    // Unregister MFE
     unregisterMFE: (state, action: PayloadAction<string>) => {
       state.connectedMFEs = state.connectedMFEs.filter(mfe => mfe !== action.payload)
     },
 
-    // Send message between MFEs
     sendMessage: (state, action: PayloadAction<Omit<MFEMessage, 'id' | 'timestamp'>>) => {
       const message: MFEMessage = {
         ...action.payload,
@@ -55,13 +51,11 @@ const communicationSlice = createSlice({
       }
       state.messages.push(message)
       
-      // Keep only last 100 messages to avoid memory issues
       if (state.messages.length > 100) {
         state.messages = state.messages.slice(-100)
       }
     },
 
-    // Clear messages for specific MFE or all
     clearMessages: (state, action: PayloadAction<string | undefined>) => {
       if (action.payload) {
         state.messages = state.messages.filter(

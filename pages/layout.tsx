@@ -1,28 +1,34 @@
 import React, { ReactNode } from "react";
-import { Box, CssBaseline } from "@mui/material";
+import { Box, CssBaseline, CircularProgress } from "@mui/material";
 import HeaderMFE from "../components/HeaderMFE";
 import FooterMFE from "../components/FooterMFE";
+import { useAuth } from "../shared/hooks/useAuth";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const { isLoading } = useAuth()
+
+  if (isLoading) {
+    return (
+      <Box sx={{ 
+        display: "flex", 
+        justifyContent: "center", 
+        alignItems: "center", 
+        minHeight: "100vh" 
+      }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <CssBaseline />
       <HeaderMFE />
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          marginTop: "80px", // espaço para o header
-          marginBottom: "80px", // espaço para o footer
-        }}
-      >
-        {children}
-      </Box>
+       {children}
       <FooterMFE />
     </Box>
   );

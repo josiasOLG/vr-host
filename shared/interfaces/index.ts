@@ -51,7 +51,6 @@ export interface FormState<T = Record<string, unknown>> {
   isDirty: boolean
 }
 
-// Product interfaces (DummyJSON API)
 export interface Product {
   id: number
   title: string

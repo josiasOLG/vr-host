@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { authService } from './authService'
 
-// Base HTTP client configuration
 export class HttpClient {
   private client: AxiosInstance
 
@@ -17,25 +17,42 @@ export class HttpClient {
   }
 
   private setupInterceptors() {
-    // Request interceptor
     this.client.interceptors.request.use(
       (config) => {
+        const token = localStorage.getItem('accessToken')
+        if (token) {
+          config.headers = config.headers || {}
+          config.headers.Authorization = `Bearer ${token}`
+        }
         return config
       },
       (error) => Promise.reject(error)
     )
 
-    // Response interceptor
     this.client.interceptors.response.use(
       (response) => response,
-      (error) => {
+      async (error) => {
+        const originalRequest = error.config
+        
+        if (error.response?.status === 401 && !originalRequest._retry) {
+          originalRequest._retry = true
+          
+          const refreshToken = localStorage.getItem('refreshToken')
+          if (refreshToken) {
+            const newAccessToken = await authService.handleTokenRefresh()
+            if (newAccessToken) {
+              originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
+              return this.client(originalRequest)
+            }
+          }
+        }
+        
         console.error('HTTP Error:', error.response?.status, error.response?.data)
         return Promise.reject(error)
       }
     )
   }
 
-  // HTTP methods
   async get<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const response: AxiosResponse<T> = await this.client.get(url, config)
     return response.data
@@ -62,10 +79,8 @@ export class HttpClient {
   }
 }
 
-// Default HTTP client instance
 export const httpClient = new HttpClient()
 
-// HTTP utilities
 export const createFormData = (data: Record<string, unknown>): FormData => {
   const formData = new FormData()
   Object.entries(data).forEach(([key, value]) => {

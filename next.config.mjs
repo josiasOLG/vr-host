@@ -8,6 +8,10 @@ const nextConfig = {
         new NextFederationPlugin({
           name: 'host',
           filename: 'static/chunks/remoteEntry.js',
+          exposes: {
+            './useCart': './shared/hooks/useCart.ts',
+            './store': './shared/store/index.ts',
+          },
           remotes: {
             header: `header@http://localhost:3001/_next/static/chunks/remoteEntry.js`,
             footer: `footer@http://localhost:3002/_next/static/chunks/remoteEntry.js`,
