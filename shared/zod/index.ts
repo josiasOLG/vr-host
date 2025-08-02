@@ -1,6 +1,5 @@
 import { z } from 'zod'
 
-// User validation schemas
 export const UserSchema = z.object({
   id: z.string().uuid(),
   name: z.string().min(1, 'Nome é obrigatório').max(100, 'Nome muito longo'),
@@ -19,7 +18,6 @@ export const CreateUserSchema = UserSchema.omit({
 
 export const UpdateUserSchema = CreateUserSchema.partial()
 
-// API Response schemas
 export const ApiResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
   z.object({
     data: dataSchema,
@@ -44,7 +42,6 @@ export const PaginatedResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =
     pagination: PaginationSchema,
   })
 
-// Form validation schemas
 export const LoginSchema = z.object({
   email: z.string().email('Email inválido'),
   password: z.string().min(6, 'Senha deve ter pelo menos 6 caracteres'),
@@ -58,7 +55,6 @@ export const RegisterSchema = LoginSchema.extend({
   path: ['confirmPassword'],
 })
 
-// Navigation schemas
 export const NavigationItemSchema: z.ZodType<{
   id: string
   label: string

@@ -1,4 +1,3 @@
-// Common interfaces shared across MFEs
 export interface User {
   id: string
   name: string

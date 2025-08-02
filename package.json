@@ -6,16 +6,24 @@
     "dev": "cross-env NEXT_PRIVATE_LOCAL_WEBPACK=true next dev",
     "build": "cross-env NEXT_PRIVATE_LOCAL_WEBPACK=true next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "install:all": "npm install && npm run install:card && npm run install:header && npm run install:footer",
+    "install:card": "cd ../vr-card && npm install",
+    "install:header": "cd ../vr-header && npm install",
+    "install:footer": "cd ../vr-footer && npm install",
+    "start:all": "npx concurrently -n \"HOST,CARD,HEADER,FOOTER\" -c \"bgBlue.bold,bgGreen.bold,bgMagenta.bold,bgYellow.bold\" \"npm run dev\" \"npm run dev:card\" \"npm run dev:header\" \"npm run dev:footer\"",
+    "dev:card": "cd ../vr-card && npm run dev",
+    "dev:header": "cd ../vr-header && npm run dev",
+    "dev:footer": "cd ../vr-footer && npm run dev"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.2.7",
     "cross-env": "^7.0.3",
     "next": "^14.2.15",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "webpack": "^5.94.0",
-    "@reduxjs/toolkit": "^2.2.7",
-    "react-redux": "^9.1.2"
+    "react-redux": "^9.1.2",
+    "webpack": "^5.94.0"
   },
   "devDependencies": {
     "@emotion/react": "^11.11.4",
@@ -26,6 +34,7 @@
     "@types/node": "^20.14.15",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.15",
     "postcss": "^8.4.31",
