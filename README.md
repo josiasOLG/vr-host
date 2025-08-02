@@ -1,37 +1,152 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VR System - Microfrontend Host
 
-## Getting Started
+Este é o sistema principal que orquestra os microfrontends do VR System. O projeto utiliza Next.js e Module Federation para integrar diferentes aplicações de forma independente.
 
-First, run the development server:
-node -v v22.14.0
+## Arquitetura do Sistema
+
+O sistema é composto por:
+
+- **vr-host**: Aplicação principal que integra todos os microfrontends
+- **vr-card**: Microfrontend responsável pelo catálogo de produtos
+- **vr-header**: Microfrontend que gerencia o cabeçalho e carrinho de compras
+- **vr-footer**: Microfrontend que renderiza o rodapé da aplicação
+
+## Pré-requisitos
+
+- Node.js v22.14.0 ou superior
+- npm, yarn, pnpm ou bun
+
+## Instalação Completa
+
+Para instalar todas as dependências de todos os projetos de uma vez:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run install:all
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ou instale manualmente cada projeto:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Instalar dependências do host
+npm install
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Instalar dependências dos microfrontends
+npm run install:card
+npm run install:header
+npm run install:footer
+```
 
-## Learn More
+## Como Executar o Sistema
 
-To learn more about Next.js, take a look at the following resources:
+### Opção 1: Executar tudo simultaneamente (Recomendado)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run start:all
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Este comando iniciará todos os serviços simultaneamente:
 
-## Deploy on Vercel
+- Host: http://localhost:3000
+- Card MFE: http://localhost:3001
+- Header MFE: http://localhost:3002
+- Footer MFE: http://localhost:3003
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Opção 2: Executar serviços individualmente
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Se preferir ter controle individual sobre cada serviço:
+
+```bash
+# Terminal 1 - Host (deve ser o último a iniciar)
+npm run dev
+
+# Terminal 2 - Card MFE
+npm run dev:card
+
+# Terminal 3 - Header MFE
+npm run dev:header
+
+# Terminal 4 - Footer MFE
+npm run dev:footer
+```
+
+**Importante**: Os microfrontends devem estar rodando antes do host para evitar erros de carregamento.
+
+## Scripts Disponíveis
+
+### Desenvolvimento
+
+- `npm run dev` - Inicia apenas o host
+- `npm run start:all` - Inicia todos os serviços
+- `npm run dev:card` - Inicia apenas o microfrontend de produtos
+- `npm run dev:header` - Inicia apenas o microfrontend do cabeçalho
+- `npm run dev:footer` - Inicia apenas o microfrontend do rodapé
+
+### Instalação
+
+- `npm run install:all` - Instala dependências de todos os projetos
+- `npm run install:card` - Instala dependências do card MFE
+- `npm run install:header` - Instala dependências do header MFE
+- `npm run install:footer` - Instala dependências do footer MFE
+
+### Testes
+
+- `npm run test` - Executa testes do host
+- `npm run test:all` - Executa todos os testes de todos os projetos
+- `npm run test:watch` - Executa testes em modo watch
+- `npm run test:coverage` - Gera relatório de cobertura
+
+### Build e Deploy
+
+- `npm run build` - Build da aplicação host
+- `npm run start` - Inicia aplicação em modo produção
+
+## Estrutura dos Portas
+
+| Serviço    | Porta | URL                   |
+| ---------- | ----- | --------------------- |
+| Host       | 3000  | http://localhost:3000 |
+| Card MFE   | 3001  | http://localhost:3001 |
+| Header MFE | 3002  | http://localhost:3002 |
+| Footer MFE | 3003  | http://localhost:3003 |
+
+## Funcionalidades
+
+- **Catálogo de Produtos**: Visualização de produtos com grid responsivo
+- **Carrinho de Compras**: Adicionar, remover e gerenciar itens no carrinho
+- **Interface Unificada**: Header e footer consistentes em toda aplicação
+- **Carregamento Independente**: Cada microfrontend carrega de forma assíncrona
+
+## Tecnologias Utilizadas
+
+- Next.js 14
+- React 18
+- TypeScript
+- Material-UI
+- Module Federation
+- Redux Toolkit (para gerenciamento de estado do carrinho)
+
+## Desenvolvimento
+
+Durante o desenvolvimento, você pode modificar qualquer microfrontend e ver as mudanças refletidas automaticamente no host. Cada aplicação mantém seu próprio hot-reload.
+
+## Troubleshooting
+
+### Erro de "Module not found"
+
+Certifique-se de que todos os microfrontends estão rodando antes de iniciar o host.
+
+### Porta já em uso
+
+Se alguma porta estiver ocupada, você pode modificar no arquivo `next.config.mjs` de cada projeto.
+
+### Problemas de CORS
+
+Os microfrontends são configurados para aceitar requests do host. Se houver problemas, verifique as configurações de CORS nos arquivos de configuração.
+
+## Deploy
+
+Para deploy em produção, cada microfrontend deve ser deployado independentemente. Recomendamos usar a Vercel para facilitar o processo.
+
+---
+
+**Dica**: Use `npm run start:all` para uma experiência de desenvolvimento mais fluida, especialmente quando estiver trabalhando
